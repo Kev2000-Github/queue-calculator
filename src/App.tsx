@@ -90,6 +90,16 @@ function App() {
         </form>
         {queueResult && (
           <div className="p-2 rounded-lg shadow-md bg-gray-600">
+            <div className="flex flex-wrap gap-4 w-full border-b-2 border-white">
+              <p className="w-full flex-1 font-bold p-2">W: {queueResult.W}</p>
+              <p className="w-full flex-1 font-bold p-2">
+                Wq: {queueResult.Wq}
+              </p>
+              <p className="w-full flex-1 font-bold p-2">L: {queueResult.L}</p>
+              <p className="w-full flex-1 font-bold p-2">
+                Lq: {queueResult.Lq}
+              </p>
+            </div>
             <Table>
               <TableCaption>Probabilidades del problema.</TableCaption>
               <TableHeader>
