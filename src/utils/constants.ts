@@ -1,0 +1,16 @@
+export enum InOutType {
+  ALL = "ALL",
+  LESS_THAN_EQUAL = "LESS_THAN_EQUAL",
+  REST = "REST",
+}
+
+export enum QueueType {
+  MM1_FINITE = "MM1_FINITE",
+  MM1_INFINITE = "MM1_INFINITE",
+  MMC_FINITE = "MMC_FINITE",
+  MMC_INFINITE = "MMC_INFINITE",
+  MM1_GENERAL = "MM1_GENERAL",
+  MMC_GENERAL = "MMC_GENERAL",
+}
+
+export const DECIMAL_PLACES = 6;

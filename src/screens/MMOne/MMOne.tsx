@@ -10,12 +10,13 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { CalcSchema, calcSchema } from "./MMOne.schema";
-import { QueueMethods } from "@/service/queueMethods";
 import { QueueResult } from "@/service/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { QueueModel } from "@/service/queueModels";
+import { InOutType } from "@/utils/constants";
 
 const MMOnePage = () => {
   const [queueResult, setQueueResult] = useState<QueueResult | null>(null);
@@ -24,11 +25,21 @@ const MMOnePage = () => {
   });
 
   const onCalculate = (data: CalcSchema) => {
-    const calculations = QueueMethods.calcCumulativeProbabilities(
-      +data.lambda,
-      +data.miu,
-      +data.iterations
-    );
+    const calculator = QueueModel.instance;
+
+    const calculations = calculator.calculateCummulativeProbabilities({
+      n: +data.iterations,
+      maxCapacity: 0,
+      numberServers: 1,
+      inOutAvg: [
+        {
+          type: InOutType.ALL,
+          numberAnchor: 0,
+          lambda: +data.lambda,
+          miu: +data.miu,
+        },
+      ],
+    });
     setQueueResult(calculations);
   };
   return (
