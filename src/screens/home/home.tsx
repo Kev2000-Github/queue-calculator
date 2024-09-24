@@ -7,6 +7,10 @@ const types = [
     path: routes.MM1,
   },
   {
+    name: "M/M/1 General",
+    path: routes.MM1_General,
+  },
+  {
     name: "M/M/C",
     path: routes.MMC,
   },

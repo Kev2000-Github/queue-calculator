@@ -108,7 +108,6 @@ export class QueueModel {
     const inOutAvgTypes = inOutAvg.map((inOutAvg) => inOutAvg.type);
 
     return (
-      inOutAvg.length > 1 &&
       this.countTypes(inOutAvgTypes, InOutType.ALL) === 0 &&
       this.countTypes(inOutAvgTypes, InOutType.LESS_THAN_EQUAL) > 0 &&
       this.countTypes(inOutAvgTypes, InOutType.REST) < 2

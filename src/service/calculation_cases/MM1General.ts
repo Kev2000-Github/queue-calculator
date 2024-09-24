@@ -17,11 +17,11 @@ export class MM1General implements ICalculator {
     //Probabilities with Po multiplication pending
     const partialProbabilities: number[] = [];
 
-    let index = 1;
+    let index = 0;
     for (const { lambda, miu, numberAnchor, type } of inOutAvg) {
       if (type === InOutType.LESS_THAN_EQUAL) {
         const limit = numberAnchor;
-        while (index <= limit) {
+        while (index < limit) {
           const prevPartialProbability = partialProbabilities[index - 1] || 1;
           partialProbabilities.push(prevPartialProbability * (lambda / miu));
           index++;
@@ -29,26 +29,56 @@ export class MM1General implements ICalculator {
       } else if (type === InOutType.REST) {
         const rho = lambda / miu;
         if (rho >= 1) return null;
-        partialProbabilities.push(1 / (1 - rho));
+        const prevPartialProbability = partialProbabilities[index - 1] || 1;
+        const partialProbRest = prevPartialProbability * (1 / (1 - rho));
+        partialProbabilities.pop();
+        partialProbabilities.push(partialProbRest);
         break;
       }
     }
+    console.log(partialProbabilities);
 
-    const p0 = 1 / partialProbabilities.reduce((acc, curr) => acc + curr, 0);
+    const p0 =
+      1 / (1 + partialProbabilities.reduce((acc, curr) => acc + curr, 0));
 
-    //Complete probabilities
     const Pn: QueueProbability[] = [
       {
         probability: p0,
         cummulativeProbability: p0,
       },
     ];
-    for (let i = 1; i <= n; i++) {
-      const Pi = p0 * (partialProbabilities[i - 1] || 0);
-      Pn.push({
-        probability: Pi,
-        cummulativeProbability: Pn[i - 1].cummulativeProbability + Pi,
-      });
+
+    //Complete probabilities
+    const lessLimits = inOutAvg.filter(
+      (item) => item.type === InOutType.LESS_THAN_EQUAL
+    );
+    const restLimit = inOutAvg.find((item) => item.type === InOutType.REST);
+
+    index = 1;
+    for (const { numberAnchor, lambda, miu } of lessLimits) {
+      while (index <= numberAnchor) {
+        const prevProbability = Pn[index - 1].probability;
+        const probability = prevProbability * (lambda / miu);
+        Pn.push({
+          probability,
+          cummulativeProbability:
+            Pn[index - 1].cummulativeProbability + probability,
+        });
+        index++;
+      }
+    }
+    if (restLimit) {
+      while (index < n) {
+        const prevProbability = Pn[index - 1].probability;
+        const probability =
+          (prevProbability * restLimit.lambda) / restLimit.miu;
+        Pn.push({
+          probability,
+          cummulativeProbability:
+            Pn[index - 1].cummulativeProbability + probability,
+        });
+        index++;
+      }
     }
 
     const L = Pn.reduce((acc, curr, index) => {
