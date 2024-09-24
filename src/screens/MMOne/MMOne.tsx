@@ -26,10 +26,11 @@ const MMOnePage = () => {
 
   const onCalculate = (data: CalcSchema) => {
     const calculator = QueueModel.instance;
+    const maxCapacity = data.maxCapacity ? +data.maxCapacity : 0;
 
     const calculations = calculator.calculateCummulativeProbabilities({
       n: +data.iterations,
-      maxCapacity: 0,
+      maxCapacity,
       numberServers: 1,
       inOutAvg: [
         {
@@ -84,20 +85,39 @@ const MMOnePage = () => {
             )}
           </div>
         </div>
-        <div className="w-fit flex-1 space-y-2">
-          <Label htmlFor="iterations">Numero de iteraciones:</Label>
-          <Input
-            {...register("iterations")}
-            id="iterations"
-            className="bg-transparent border-gray-600"
-            type="text"
-            placeholder="Iteraciones"
-          />
-          {formState.errors.iterations && (
-            <p className="text-red-500 text-sm">
-              {formState.errors.iterations.message}
-            </p>
-          )}
+        <div className="flex gap-4 w-fit">
+          <div className="w-fit flex-1 space-y-2">
+            <Label htmlFor="iterations">Numero de iteraciones:</Label>
+            <Input
+              {...register("iterations")}
+              id="iterations"
+              className="bg-transparent border-gray-600"
+              type="text"
+              placeholder="Iteraciones"
+            />
+            {formState.errors.iterations && (
+              <p className="text-red-500 text-sm">
+                {formState.errors.iterations.message}
+              </p>
+            )}
+          </div>
+          <div className="w-fit flex-1 space-y-2">
+            <Label className="text-nowrap" htmlFor="maxCapacity">
+              Maxima capacidad del sistema:
+            </Label>
+            <Input
+              {...register("maxCapacity")}
+              id="maxCapacity"
+              className="bg-transparent border-gray-600"
+              type="text"
+              placeholder="N"
+            />
+            {formState.errors.maxCapacity && (
+              <p className="text-red-500 text-sm">
+                {formState.errors.maxCapacity.message}
+              </p>
+            )}
+          </div>
         </div>
         <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
           Calcular

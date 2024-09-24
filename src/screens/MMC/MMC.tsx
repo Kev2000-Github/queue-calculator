@@ -115,6 +115,23 @@ const MMCPage = () => {
               </p>
             )}
           </div>
+          <div className="w-fit flex-1 space-y-2">
+            <Label className="text-nowrap" htmlFor="maxCapacity">
+              Maxima capacidad del sistema:
+            </Label>
+            <Input
+              {...register("maxCapacity")}
+              id="maxCapacity"
+              className="bg-transparent border-gray-600"
+              type="text"
+              placeholder="N"
+            />
+            {formState.errors.maxCapacity && (
+              <p className="text-red-500 text-sm">
+                {formState.errors.maxCapacity.message}
+              </p>
+            )}
+          </div>
         </div>
         <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
           Calcular

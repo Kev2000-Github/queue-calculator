@@ -1,4 +1,8 @@
-import { zodIntPositive, zodNumberPositive } from "@/utils/schema";
+import {
+  zodIntPositive,
+  zodIntPositiveOptional,
+  zodNumberPositive,
+} from "@/utils/schema";
 import z from "zod";
 
 export const calcSchema = z.object({
@@ -6,6 +10,7 @@ export const calcSchema = z.object({
   lambda: zodNumberPositive,
   miu: zodNumberPositive,
   servers: zodIntPositive,
+  maxCapacity: zodIntPositiveOptional,
 });
 
 export type CalcSchema = z.infer<typeof calcSchema>;
