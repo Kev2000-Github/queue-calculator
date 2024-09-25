@@ -48,11 +48,28 @@ const MMOneGeneralPage = () => {
     name: "inOutAvg",
   });
 
-  const onCalculate = (data: CalcSchema) => {
-    const inOutAvgOrdered = data.inOutAvg.sort(
+  const orderConditions = (inOutAvg: CalcSchema["inOutAvg"]) => {
+    const inOutAvgOrdered = inOutAvg.sort(
       (a, b) => +a.numberAnchor - +b.numberAnchor
     );
     setValue("inOutAvg", inOutAvgOrdered);
+  };
+
+  const onCalculate = (data: CalcSchema) => {
+    orderConditions(data.inOutAvg);
+    const restConditionIdx = data.inOutAvg.findIndex(
+      (item) => item.type === InOutType.REST
+    );
+    if (
+      restConditionIdx !== -1 &&
+      restConditionIdx !== data.inOutAvg.length - 1
+    ) {
+      alert(
+        "La condicion de ≥ debe ser la ultima, no puede haber numero limite mayor que ella"
+      );
+      return;
+    }
+
     const inOutAvg = data.inOutAvg.map(
       ({ lambda, miu, numberAnchor, type }) => {
         return {
@@ -141,7 +158,7 @@ const MMOneGeneralPage = () => {
                   render={({ field }) => (
                     <Select
                       onValueChange={(val) => field.onChange(val)}
-                      defaultValue={InOutType.LESS_THAN_EQUAL}
+                      value={field.value}
                     >
                       <SelectTrigger className="w-28 bg-transparent border-gray-600">
                         <SelectValue placeholder="Selecciona condicion" />

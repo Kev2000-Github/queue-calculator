@@ -15,31 +15,29 @@ export class MM1General implements ICalculator {
     inOutAvg,
   }: ICalculationProps): CumulativeProbabilityData | null {
     //Probabilities with Po multiplication pending
-    const partialProbabilities: number[] = [];
+    const partialProbabilities: number[] = [1];
 
-    let index = 0;
+    let index = 1;
     for (const { lambda, miu, numberAnchor, type } of inOutAvg) {
       if (type === InOutType.LESS_THAN_EQUAL) {
         const limit = numberAnchor;
-        while (index < limit) {
-          const prevPartialProbability = partialProbabilities[index - 1] || 1;
+        while (index <= limit) {
+          const prevPartialProbability = partialProbabilities[index - 1];
           partialProbabilities.push(prevPartialProbability * (lambda / miu));
           index++;
         }
       } else if (type === InOutType.REST) {
         const rho = lambda / miu;
         if (rho >= 1) return null;
-        const prevPartialProbability = partialProbabilities[index - 1] || 1;
+        const prevPartialProbability = partialProbabilities[index - 1];
         const partialProbRest = prevPartialProbability * (1 / (1 - rho));
         partialProbabilities.pop();
         partialProbabilities.push(partialProbRest);
         break;
       }
     }
-    console.log(partialProbabilities);
 
-    const p0 =
-      1 / (1 + partialProbabilities.reduce((acc, curr) => acc + curr, 0));
+    const p0 = 1 / partialProbabilities.reduce((acc, curr) => acc + curr, 0);
 
     const Pn: QueueProbability[] = [
       {
