@@ -1,5 +1,5 @@
-import { Table } from "lucide-react";
 import {
+  Table,
   TableCaption,
   TableHeader,
   TableRow,
