@@ -23,6 +23,23 @@ export const calcSchema = z.object({
         return true;
       },
       { message: "Solo se puede tener una condicion de ≥" }
+    )
+    .refine(
+      (items) => {
+        const restTypes = items.filter((item) => item.type === InOutType.REST);
+        if (restTypes.length === 1) {
+          const restItem = restTypes[0];
+          const rho = +restItem.lambda / +restItem.miu;
+          if (rho >= 1) {
+            return false;
+          }
+        }
+        return true;
+      },
+      {
+        message:
+          "ρ debe ser menor a 1 para la condicion que tiende al infinito, el sistema no es estable",
+      }
     ),
 });
 
