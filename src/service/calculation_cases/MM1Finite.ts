@@ -40,15 +40,16 @@ export class MM1Finite implements ICalculator {
       }
     }
 
-    const lambdaPer = lambda * Pn[maxCapacity - 1].probability;
+    const lambdaPer = lambda * Pn[maxCapacity].probability;
     const lambdaEff = lambda - lambdaPer;
     const rhoEff = lambdaEff / miu;
-    const L =
-      (rhoEff *
-        (1 -
-          (maxCapacity + 1) * Math.pow(rhoEff, maxCapacity) +
-          maxCapacity * Math.pow(rhoEff, maxCapacity + 1))) /
-      ((1 - rho) * (1 - Math.pow(rho, maxCapacity + 1)));
+    const top =
+      rhoEff *
+      (1 -
+        (maxCapacity + 1) * Math.pow(rhoEff, maxCapacity) +
+        maxCapacity * Math.pow(rhoEff, maxCapacity + 1));
+    const bottom = (1 - rhoEff) * (1 - Math.pow(rhoEff, maxCapacity + 1));
+    const L = top / bottom;
     const W = L / lambdaEff;
     const Wq = W - 1 / miu;
     const Lq = lambdaEff * Wq;

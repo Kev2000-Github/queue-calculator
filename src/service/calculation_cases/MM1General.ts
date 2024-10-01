@@ -80,7 +80,7 @@ export class MM1General implements ICalculator {
     }
 
     const L = Pn.reduce((acc, curr, index) => {
-      return acc + curr.probability * (index + 1);
+      return acc + curr.probability * index;
     }, 0);
     const W = 0;
     const Wq = 0;
