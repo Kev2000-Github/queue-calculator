@@ -1,0 +1,89 @@
+import {
+    CumulativeProbabilityData,
+    ICalculationProps,
+    QueueProbability,
+  } from "../types";
+import { ICalculator } from "./ICalculator";
+import { factorial, toFixedIfNecessary } from "@/utils/utils";
+import { DECIMAL_PLACES } from "@/utils/constants";
+
+export class MMCFinite implements ICalculator {
+    constructor() {}
+
+    public calculateCummulativeProbabilities({
+        numberServers,
+        n,
+        inOutAvg,
+        maxCapacity
+    }: ICalculationProps): CumulativeProbabilityData {
+        const {lambda, miu} = inOutAvg[0];
+        const rho = lambda / miu;
+        const rhoC = rho / numberServers;
+        const helper = maxCapacity - numberServers + 1
+        let last_operand_p0 = 0
+        if (rhoC == 1){
+            last_operand_p0 = helper;
+        } else {
+            last_operand_p0 =
+            (1 - Math.pow(rhoC, helper)) /
+            (1 - rhoC);
+        }
+
+        let p0 = 0;
+        for (let i = 0; i < numberServers; i++){
+            p0 += Math.pow(rho, i) / factorial(i);
+        }
+        p0 += (Math.pow(rho, numberServers) / factorial(numberServers)) * last_operand_p0;
+        const Pn: QueueProbability[] = [
+            {
+              probability: p0,
+              cummulativeProbability: p0,
+            },
+          ];
+        for (let i = 1; i <= n; i++){
+            let pi = 0;
+            if (i > 0 && i < numberServers){
+                pi = (Math.pow(p0, i) * p0) / factorial(i);
+            } else if (i >= numberServers && i <= maxCapacity) {
+                pi = (Math.pow(p0, i) * p0) /
+                (factorial(numberServers) * Math.pow(numberServers, i - numberServers));
+            }
+            Pn.push({
+                probability: pi,
+                cummulativeProbability: Pn[i - 1].cummulativeProbability + pi
+            })
+        }
+
+        const lambdaPer = lambda * Pn[maxCapacity].probability;
+        const lambdaEff = lambda - lambdaPer;
+        const rhoEff = lambdaEff / miu;
+        const rhoEffC = rhoEff / numberServers;
+        let Lq = 0
+        if (rhoEffC == 1){
+            Lq = Math.pow(rhoEff, numberServers) * (maxCapacity - numberServers) *
+            (helper) * p0 / (2 * factorial(numberServers))
+        } else {
+            Lq = (Math.pow(rhoEff, numberServers + 1) /
+            (factorial(numberServers - 1) * Math.pow(numberServers - rhoEff, 2))) *
+            (1 - Math.pow(rhoEffC, helper) - helper * (1 - rhoEffC) *
+            Math.pow(rhoEffC, maxCapacity - numberServers)) * p0
+        }
+        let L = Lq + rhoEff;
+        let W = L / lambdaEff;
+        let Wq = Lq / lambdaEff;
+
+        return {
+            L: toFixedIfNecessary(L, DECIMAL_PLACES),
+            Lq: toFixedIfNecessary(Lq, DECIMAL_PLACES),
+            W: toFixedIfNecessary(W, DECIMAL_PLACES),
+            Wq: toFixedIfNecessary(Wq, DECIMAL_PLACES),
+            Pn: Pn.map((p) => ({
+                probability: toFixedIfNecessary(p.probability, DECIMAL_PLACES),
+                cummulativeProbability: toFixedIfNecessary(
+                  p.cummulativeProbability,
+                  DECIMAL_PLACES
+                ),
+            })),
+        }
+    }
+}
