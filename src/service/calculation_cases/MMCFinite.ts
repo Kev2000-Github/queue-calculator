@@ -20,6 +20,7 @@ export class MMCFinite implements ICalculator {
         const rho = lambda / miu;
         const rhoC = rho / numberServers;
         const helper = maxCapacity - numberServers + 1
+
         let last_operand_p0 = 0
         if (rhoC == 1){
             last_operand_p0 = helper;
@@ -28,12 +29,12 @@ export class MMCFinite implements ICalculator {
             (1 - Math.pow(rhoC, helper)) /
             (1 - rhoC);
         }
-
         let p0 = 0;
         for (let i = 0; i < numberServers; i++){
             p0 += Math.pow(rho, i) / factorial(i);
         }
         p0 += (Math.pow(rho, numberServers) / factorial(numberServers)) * last_operand_p0;
+        p0 = 1 / p0;
         const Pn: QueueProbability[] = [
             {
               probability: p0,
@@ -42,11 +43,11 @@ export class MMCFinite implements ICalculator {
           ];
         for (let i = 1; i <= n; i++){
             let pi = 0;
-            if (i > 0 && i < numberServers){
-                pi = (Math.pow(p0, i) * p0) / factorial(i);
+            if (i < numberServers){
+                pi = (Math.pow(rho, i) / factorial(i)) * p0;
             } else if (i >= numberServers && i <= maxCapacity) {
-                pi = (Math.pow(p0, i) * p0) /
-                (factorial(numberServers) * Math.pow(numberServers, i - numberServers));
+                pi = (Math.pow(rho, i) /
+                (factorial(numberServers) * Math.pow(numberServers, i - numberServers))) * p0;
             }
             Pn.push({
                 probability: pi,
@@ -60,13 +61,13 @@ export class MMCFinite implements ICalculator {
         const rhoEffC = rhoEff / numberServers;
         let Lq = 0
         if (rhoEffC == 1){
-            Lq = Math.pow(rhoEff, numberServers) * (maxCapacity - numberServers) *
-            (helper) * p0 / (2 * factorial(numberServers))
+            Lq = (Math.pow(rhoEff, numberServers) * (maxCapacity - numberServers) *
+            helper * p0) / (factorial(2 * numberServers))
         } else {
-            Lq = (Math.pow(rhoEff, numberServers + 1) /
+            Lq = ((Math.pow(rhoEff, numberServers + 1) * p0) /
             (factorial(numberServers - 1) * Math.pow(numberServers - rhoEff, 2))) *
-            (1 - Math.pow(rhoEffC, helper) - helper * (1 - rhoEffC) *
-            Math.pow(rhoEffC, maxCapacity - numberServers)) * p0
+            (1 - Math.pow(rhoEffC, helper) - (helper * (1 - rhoEffC) *
+            Math.pow(rhoEffC, maxCapacity - numberServers)))
         }
         let L = Lq + rhoEff;
         let W = L / lambdaEff;
