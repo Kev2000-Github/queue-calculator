@@ -64,10 +64,10 @@ export class MMCFinite implements ICalculator {
             Lq = (Math.pow(rhoEff, numberServers) * (maxCapacity - numberServers) *
             helper * p0) / (factorial(2 * numberServers))
         } else {
-            Lq = ((Math.pow(rhoEff, numberServers + 1) * p0) /
+            Lq = (Math.pow(rhoEff, numberServers + 1) /
             (factorial(numberServers - 1) * Math.pow(numberServers - rhoEff, 2))) *
             (1 - Math.pow(rhoEffC, helper) - (helper * (1 - rhoEffC) *
-            Math.pow(rhoEffC, maxCapacity - numberServers)))
+            Math.pow(rhoEffC, maxCapacity - numberServers))) * p0
         }
         let L = Lq + rhoEff;
         let W = L / lambdaEff;
