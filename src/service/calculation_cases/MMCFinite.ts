@@ -58,16 +58,15 @@ export class MMCFinite implements ICalculator {
         const lambdaPer = lambda * Pn[maxCapacity].probability;
         const lambdaEff = lambda - lambdaPer;
         const rhoEff = lambdaEff / miu;
-        const rhoEffC = rhoEff / numberServers;
         let Lq = 0
-        if (rhoEffC == 1){
-            Lq = (Math.pow(rhoEff, numberServers) * (maxCapacity - numberServers) *
+        if (rhoC == 1){
+            Lq = (Math.pow(rho, numberServers) * (maxCapacity - numberServers) *
             helper * p0) / (factorial(2 * numberServers))
         } else {
-            Lq = (Math.pow(rhoEff, numberServers + 1) /
-            (factorial(numberServers - 1) * Math.pow(numberServers - rhoEff, 2))) *
-            (1 - Math.pow(rhoEffC, helper) - (helper * (1 - rhoEffC) *
-            Math.pow(rhoEffC, maxCapacity - numberServers))) * p0
+            Lq = (Math.pow(rho, numberServers + 1) /
+            (factorial(numberServers - 1) * Math.pow(numberServers - rho, 2))) *
+            (1 - Math.pow(rhoC, helper) - (helper * (1 - rhoC) *
+            Math.pow(rhoC, maxCapacity - numberServers))) * p0
         }
         let L = Lq + rhoEff;
         let W = L / lambdaEff;
