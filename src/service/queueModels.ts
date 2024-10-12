@@ -5,6 +5,7 @@ import {
   InOutAvg,
 } from "./types";
 import { ICalculator } from "./calculation_cases/ICalculator";
+import {MMCFinite} from "./calculation_cases/MMCFinite";
 import { MMCInfinite } from "./calculation_cases/MMCInfinite";
 import { MM1Finite } from "./calculation_cases/MM1Finite";
 import { MM1General } from "./calculation_cases/MM1General";
@@ -96,6 +97,9 @@ export class QueueModel {
         return calculator.calculateCummulativeProbabilities(props);
       case QueueType.MM1_GENERAL:
         calculator = new MM1General();
+        return calculator.calculateCummulativeProbabilities(props);
+      case QueueType.MMC_FINITE:
+        calculator = new MMCFinite();
         return calculator.calculateCummulativeProbabilities(props);
     }
   }

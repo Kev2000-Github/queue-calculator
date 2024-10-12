@@ -18,10 +18,11 @@ const MMCPage = () => {
 
   const onCalculate = (data: CalcSchema) => {
     const calculator = QueueModel.instance;
+    const maxCapacity = data.maxCapacity ? +data.maxCapacity : 0;
 
     const calculations = calculator.calculateCummulativeProbabilities({
       n: +data.iterations,
-      maxCapacity: 0,
+      maxCapacity,
       numberServers: +data.servers,
       inOutAvg: [
         {

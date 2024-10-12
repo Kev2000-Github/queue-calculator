@@ -17,21 +17,20 @@ export class MMCInfinite implements ICalculator {
   }: ICalculationProps): CumulativeProbabilityData {
     const { lambda, miu } = inOutAvg[0];
 
-    const rho = lambda / (miu * numberServers);
+    const rho = lambda / miu;
 
     let p0 = 0;
     for (let i = 0; i < numberServers; i++) {
-      p0 += Math.pow(rho * numberServers, i) / factorial(i);
+      p0 += Math.pow(rho, i) / factorial(i);
     }
     p0 +=
-      Math.pow(rho * numberServers, numberServers) /
-      (factorial(numberServers) * (1 - rho));
+      (Math.pow(rho, numberServers) / factorial(numberServers)) * (1 / (1 - rho / numberServers));
     p0 = 1 / p0;
 
     const Lq =
-      (p0 * Math.pow(rho * numberServers, numberServers) * rho) /
-      (factorial(numberServers) * Math.pow(1 - rho, 2));
-    const L = Lq + rho * numberServers;
+      (p0 * Math.pow(rho, numberServers + 1)) /
+      (factorial(numberServers - 1) * Math.pow(numberServers - rho, 2));
+    const L = Lq + rho;
     const W = L / lambda;
     const Wq = Lq / lambda;
     const Pn: QueueProbability[] = [
@@ -43,10 +42,10 @@ export class MMCInfinite implements ICalculator {
     for (let i = 1; i <= n; i++) {
       let Pi = 0;
       if (i < numberServers) {
-        Pi = (Math.pow(rho * numberServers, i) * p0) / factorial(i);
+        Pi = (Math.pow(rho, i) * p0) / factorial(i);
       } else {
         Pi =
-          (Math.pow(rho * numberServers, i) * p0) /
+          (Math.pow(rho, i) * p0) /
           (factorial(numberServers) *
             Math.pow(numberServers, i - numberServers));
       }
