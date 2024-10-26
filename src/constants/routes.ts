@@ -3,4 +3,5 @@ export const routes = {
   MM1: "/mm1",
   MMC: "/mmc",
   MM1_General: "/mm1/general",
+  COSTS: "/costs",
 };
