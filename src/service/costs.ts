@@ -1,6 +1,7 @@
-import { InOutType } from "@/utils/constants";
+import { DECIMAL_PLACES, InOutType } from "@/utils/constants";
 import { QueueModel } from "./queueModels";
 import { CostProps, CostResult } from "./types";
+import { toFixedIfNecessary } from "@/utils/utils";
 
 export class Cost{
     public constructor() {}
@@ -23,10 +24,10 @@ export class Cost{
             if (modelResult){
                 const ewc = costPerClient * modelResult.L;
                 result.push({
-                    L: modelResult.L,
-                    EOC: item.costPerTime,
-                    EWC: ewc,
-                    ETC: item.costPerTime + ewc
+                    L: toFixedIfNecessary(modelResult.L, DECIMAL_PLACES),
+                    EOC: toFixedIfNecessary(item.costPerTime, DECIMAL_PLACES),
+                    EWC: toFixedIfNecessary(ewc, DECIMAL_PLACES),
+                    ETC: toFixedIfNecessary(item.costPerTime + ewc, DECIMAL_PLACES)
 
                 })
             }
