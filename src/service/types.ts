@@ -13,6 +13,13 @@ export type QueueResult = {
   Pn: QueueProbability[];
 };
 
+export type CostResult = {
+  L: number;
+  EOC: number;
+  EWC: number;
+  ETC: number;
+}
+
 export type CumulativeProbabilityData = {
   L: number;
   W: number;
@@ -37,3 +44,10 @@ export type InOutAvg = {
   lambda: number;
   miu: number;
 };
+
+export type CostProps = {
+  lambda: number;
+  miu: number;
+  servers: number;
+  costPerTime: number;
+}
