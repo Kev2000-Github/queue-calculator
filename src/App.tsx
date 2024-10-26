@@ -5,6 +5,7 @@ import RootLayout from "./layout/root";
 import MMOnePage from "./screens/MMOne/MMOne";
 import MMCPage from "./screens/MMC/MMC";
 import MMOneGeneralPage from "./screens/MMOneGeneral/MMOneGeneral";
+import CostsPage from "./screens/costs/costs";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path={routes.MM1} element={<MMOnePage />} />
           <Route path={routes.MM1_General} element={<MMOneGeneralPage />} />
           <Route path={routes.MMC} element={<MMCPage />} />
+          <Route path={routes.COSTS} element={<CostsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
