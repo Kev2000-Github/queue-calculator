@@ -22,10 +22,11 @@ export class Cost{
                 }]
             });
             if (modelResult){
+                const eoc = item.servers == 1 ? item.costPerTime : item.costPerTime * item.servers;
                 const ewc = costPerClient * modelResult.L;
                 result.push({
                     L: toFixedIfNecessary(modelResult.L, DECIMAL_PLACES),
-                    EOC: toFixedIfNecessary(item.costPerTime, DECIMAL_PLACES),
+                    EOC: toFixedIfNecessary(eoc, DECIMAL_PLACES),
                     EWC: toFixedIfNecessary(ewc, DECIMAL_PLACES),
                     ETC: toFixedIfNecessary(item.costPerTime + ewc, DECIMAL_PLACES)
 
