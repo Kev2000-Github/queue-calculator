@@ -70,7 +70,7 @@ const CostsPage = () => {
             id="costPerClient"
             className="bg-transparent border-gray-600"
             type="text"
-            placeholder="Iteraciones"
+            placeholder="Costo de espera"
           />
           {formState.errors.costPerClient && (
             <p className="text-red-500 text-sm">
