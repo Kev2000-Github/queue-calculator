@@ -14,6 +14,10 @@ const types = [
     name: "M/M/C",
     path: routes.MMC,
   },
+  {
+    name: "Costos",
+    path: routes.COSTS
+  }
 ];
 
 const HomePage = () => {
